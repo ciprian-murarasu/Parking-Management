@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="_general::headerfiles"></head>
+<body>
+<div th:replace="_general :: nav_bar"></div>
+<div class="jumbotron">
+    <div class="container">
+        <form action="/login" method="post" style="width: 50%">
+            <label class="d-flex justify-content-end">Username:<input type="text" name="username"/> </label>
+            <label class="d-flex justify-content-end" style="margin-bottom: 1.3rem">Password: <input type="password" name="password"/> </label>
+            <div class="d-flex justify-content-end"><input type="submit" value="Login"></div>
+        </form>
+    </div>
+</div>
+<p th:text="${error_message}" class="alert" th:classappend="${error_message} != null?'alert-danger':''"></p>
+<div th:replace="_general :: footerfiles"></div>
+</body>
+</html>

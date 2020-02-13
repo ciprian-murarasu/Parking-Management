@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="_generalCustomHead::headerfiles">
+</head>
+<body>
+<div th:replace="_general :: nav_bar"></div>
+<div class="jumbotron">
+    <div class="container">
+        <form action="delete-sector" method="post">
+            <label>Select sector:
+                <select name="selected_sector">
+                    <option value=""></option>
+                    <option th:each="sector : ${sectors}" th:text="${sector.name}" th:value="${sector.id}"></option>
+                </select>
+            </label>
+            <input type="submit" value="Delete sector">
+        </form>
+        <br>
+        <form action="delete-space" method="post">
+            <div style="margin-bottom: .6rem;">
+                <div class="sector" th:each="sector : ${sectors}">
+                    <div th:each="parkingSpace : ${sector.parkingSpaces}" class="parking-space"
+                         th:text="${sector.name}+${parkingSpace.number}"
+                         th:classappend="${parkingSpace.getAvailability()?'available':'occupied'}">
+                    </div>
+                    <hr class="thicker-hr">
+                </div>
+            </div>
+            <input type="hidden" id="deleted_spaces" name="deleted_spaces">
+            <p>Your selected spaces are: <span id="show_deleted" style="font-weight: bold"></span></p>
+            <input type="submit" value="Delete spaces">
+        </form>
+        <p th:text="${error_message}" class="alert" th:classappend="${error_message} != null?'alert-danger':''"></p>
+    </div>
+</div>
+<div th:replace="_general :: footerfiles"></div>
+<script>
+    $(".available").click(function () {
+        var deletedSpaces = $("#show_deleted").text();
+        var selectedSpace = $(this).text();
+        if (!deletedSpaces.includes(selectedSpace)) {
+            if (deletedSpaces.length > 0) {
+                deletedSpaces += ", ";
+            }
+            deletedSpaces += selectedSpace;
+        }
+        else {
+            if (deletedSpaces === selectedSpace) {
+                deletedSpaces = deletedSpaces.replace(selectedSpace, "");
+            } else {
+                if (deletedSpaces.startsWith(selectedSpace)) {
+                    deletedSpaces = deletedSpaces.replace(selectedSpace + ", ", "");
+                } else {
+                    deletedSpaces = deletedSpaces.replace(", " + selectedSpace, "");
+                }
+            }
+        }
+        $("#show_deleted").text(deletedSpaces);
+        $("#deleted_spaces").val(deletedSpaces);
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="_general::headerfiles">
+</head>
+<body>
+<div th:replace="_general :: nav_bar"></div>
+<div class="jumbotron">
+    <div class="container">
+        <h1>Welcome to Parking Management</h1>
+        <hr>
+        <p class="lead">Price per hour is: 3 RON. Exit time is 30 minutes.<br>
+            Below you can see the situation of our parking spaces (available spaces are illustrated in green).<br>
+            To access our parking please buy a ticket or a subscription. If you already own a valid subscription please
+            use Access tab on the top.</p>
+        <!--<div th:replace="_general :: parkinglot"></div>-->
+        <div class="sector" th:each="sector : ${sectors}">
+            <div th:each="parkingSpace : ${sector.parkingSpaces}" class="parking-space"
+                 th:text="${sector.name}+${parkingSpace.number}"
+                 th:classappend="${parkingSpace.getAvailability()?'available':'occupied'}">
+            </div>
+            <hr class="thicker-hr">
+        </div>
+        <br>
+        <p class="alert" th:text="${error_message}"></p>
+    </div>
+</div>
+<div th:replace="_general :: footerfiles"></div>
+<script>
+    if ($(".alert").text() !== "") {
+        $(".alert").addClass("alert-danger");
+    }
+</script>
+</body>
+</html>

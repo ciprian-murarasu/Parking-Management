@@ -1,0 +1,40 @@
+<!DOCTYPE html >
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="_general::headerfiles"></head>
+<body>
+<div th:replace="_general :: nav_bar"></div>
+<div class="jumbotron">
+    <div class="container">
+        <h1>Exit parking</h1>
+        <hr>
+        <p class="lead">Use tickets or subscription codes in order to exit the parking.<br>
+            Once you payed your fee you have 30 minutes to exit our parking.<br>
+            Please note that additional time spent will be charged by the hour after this.</p>
+        <form th:action="@{/exit}" method="post">
+            <label>Insert code:
+                <input type="text" name="code" size="10" maxlength="10" required></label><br>
+            <p th:text="${error_message}" class="alert" th:classappend="${error_message} != null?'alert-danger':''"></p>
+            <input type="submit" value="Exit" >
+        </form>
+        <br>
+        <div th:class="${ticket}==null?'hidden':''" style="padding-left: .6rem">
+            <h5 class="h5">Ticket details:</h5>
+            <hr>
+            Ticket code: <span th:text="${ticket}?${ticket.code}:''" style="font-weight: bold;"></span><br>
+            Enter date: <span th:text="${ticket}?${ticket.enterDate}:''"></span><br>
+            Pay date: <span th:text="${ticket}?${ticket.payDate}:''"></span><br>
+            Exit date: <span th:text="${ticket}?${ticket.exitDate}:''"></span><br>
+            Amount: <span th:text="${ticket}?${ticket.paidAmount}:''"></span>
+        </div>
+        <div th:class="${subscription}==null?'hidden':''" style="padding-left: .6rem">
+            <h5 class="h5">Subscription details:</h5>
+            <hr>
+            Subscription code: <span th:text="${subscription}?${subscription.code}:''" style="font-weight: bold;"></span><br>
+            Start date: <span th:text="${subscription}?${subscription.startDate}:''"></span><br>
+            End date: <span th:text="${subscription}?${subscription.endDate}:''"></span>
+        </div>
+    </div>
+</div>
+<div th:replace="_general :: footerfiles"></div>
+</body>
+</html>

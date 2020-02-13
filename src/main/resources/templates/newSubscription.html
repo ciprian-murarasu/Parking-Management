@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="_general::headerfiles"></head>
+<body>
+<div th:replace="_general :: nav_bar"></div>
+<div class="jumbotron">
+    <div class="container">
+        <h1>Buy or renew subscription</h1><br>
+        <form th:action="@{/newSubscription}" method="post">
+            <p>
+                <label>Get new subscription<input type="radio" id="new" name="subscription_buy" required></label>
+                <label>Renew existing one<input type="radio" id="renew" name="subscription_buy"></label></p>
+            <p id="renew_code" style="display: none;">
+                <label>Enter the subscription's code you want to renew:
+                    <input type="text" id="existing_code" name="subscription_code" size="10"
+                           maxlength="10">
+                </label></p>
+            <p>Choose subscription type:</p>
+            <div class="form-check-inline" th:each="subscriptionType : ${subscriptionTypes}">
+                <label class="form-check-label" th:for="${subscriptionType.price}"
+                       th:text="${subscriptionType.name} + ' (' +${subscriptionType.price} + ')'"></label>
+                <input type="radio" class="form-check-input" name="subscription_type" th:id="${subscriptionType.price}"
+                       th:value="${subscriptionType.name}" required>
+            </div>
+            <br><br>
+            <label for="start_date">Start date:</label>
+            <input type="date" name="start_date" id="start_date" min="" required><br><br>
+            <input type="submit" value="Buy Subscription" ><br>
+        </form>
+        <div id="subscription_details" style="display:none">
+            <h5 class="h5">Subscription details:</h5>
+            <hr>
+            Subscription code: <span th:if="${subscription}!=null" th:text="${subscription.code}"
+                                     style="font-weight: bold;"></span><br>
+            Subscription price: <span th:if="${subscription}!=null" th:text="${subscription.price}"></span><br>
+            Start date: <span th:if="${subscription}!=null" th:text="${subscription.startDate}"></span><br>
+            End date: <span th:if="${subscription}!=null" th:text="${subscription.endDate}"></span>
+        </div>
+        <p th:text="${error_message}" class="alert" th:classappend="${error_message} != null?'alert-danger':''"></p>
+    </div>
+</div>
+<div th:replace="_general :: footerfiles"></div>
+<script>
+    if ($("#subscription_details span").length > 0 && $(".alert").text() === "") {
+        $("#subscription_details").hide();
+    }
+
+    $("#new").click(function () {
+        $("#renew_code").hide();
+        $("#renew_code").find("input").val("");
+        $("#subscription_details").hide();
+    });
+    $("#renew").click(function () {
+        $("#renew_code").show();
+        $("#subscription_details").hide();
+    });
+    $("#new, #existing_code").click(function () {
+        $(".alert").hide();
+    });
+
+    var minDate = new Date();
+    minDate.setDate(new Date().getDate());
+    var maxDate = new Date();
+    maxDate.setDate(new Date().getDate() + 30);
+    $("#start_date").attr('min', minDate.toISOString().slice(0, 10));
+    $("#start_date").attr('max', maxDate.toISOString().slice(0, 10));
+</script>
+</body>
+</html>

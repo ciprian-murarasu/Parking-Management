@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Buy</title>
+    <script th:src="@{https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js}"></script>
+    <link rel="stylesheet" th:href="@{https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css}"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script th:src="@{https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js}"
+            integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+            crossorigin="anonymous"></script>
+    <script th:src="@{https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js}"
+            integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+            crossorigin="anonymous"></script>
+    <link rel="stylesheet" th:href="@{/style.css}"/>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-lightcbg-light" th:fragment="nav_bar">
+    <a class="navbar-brand">Parking Management</a>
+    <div class="navbar-collapse collapse">
+        <ul class="nav navbar-nav">
+            <li class="nav-item active"><a th:href="@{/}" class="nav-link">Home<span
+                    class="sr-only">(current)</span></a></li>
+            <li class="nav-item"><a th:href="@{/buy}" class="nav-link">Buy</a></li>
+            <li class="nav-item"><a th:href="@{/access}" class="nav-link">Access</a></li>
+            <li class="nav-item"><a th:href="@{/pay}" class="nav-link">Pay</a></li>
+            <li class="nav-item"><a th:href="@{/exit}" class="nav-link">Exit</a></li>
+        </ul>
+    </div>
+</nav>
+
+<a th:href="@{/newTicket}" style="margin-left: .6rem">Buy Ticket</a><br>
+
+<br>
+<form th:action="@{/newSubscription}" method="post">
+    <label>New <input type="radio" id="new" name="subscription_buy" required></label>
+    <label>Renew <input type="radio" id="renew" name="subscription_buy"></label><br>
+
+    <label id="label_renew" style="display: none;">Subscription code to be renewed:
+        <input type="text" name="subscription_code" size="10" maxlength="10">
+    </label><br><br>
+    <p>Choose subscription type:</p>
+    <div class="form-check-inline" th:each="subscriptionType : ${subscriptionTypes}">
+        <label class="form-check-label" th:for="${subscriptionType.price}"
+               th:text="${subscriptionType.name} + ' (' +${subscriptionType.price} + ')'"></label>
+        <input type="radio" class="form-check-input" name="subscription_type" th:id="${subscriptionType.price}"
+               th:value="${subscriptionType.name}" required>
+    </div>
+    <br><br>
+    <label for="start_date">Start date:</label>
+    <input type="date" name="start_date" id="start_date" min="" required><br><br>
+    <input type="submit" value="Buy Subscription" ><br>
+</form>
+<div id="subscription" hidden>
+    Subscription code: <span th:if="${subscription}!=null" id="subscription_code" th:text="${subscription.code}"></span><br>
+    Subscription price: <span th:if="${subscription}!=null" id="subscription_price"
+                              th:text="${subscription.price}"></span><br>
+    Start date: <span th:if="${subscription}!=null" id="subscription_start_date"
+                      th:text="${subscription.startDate}"></span><br>
+    End date: <span th:if="${subscription}!=null" id="subscription_end_date" th:text="${subscription.endDate}"></span>
+</div>
+<p th:text="${error_message}" class="alert" th:classappend="${error_message} != null?'alert-danger':''"></p>
+
+<script>
+    if (typeof($("span[id^='subscription']")) !== 'undefined' && $(".alert").text() === "") {
+        $("span[id^='subscription']").parent().removeAttr('hidden');
+    }
+    var minDate = new Date();
+    minDate.setDate(new Date().getDate());
+    var maxDate = new Date();
+    maxDate.setDate(new Date().getDate() + 30);
+    $("#start_date").attr('min', minDate.toISOString().slice(0, 10));
+    $("#start_date").attr('max', maxDate.toISOString().slice(0, 10));
+
+    $("#new").click(function () {
+        $("#label_renew").css("display", "none");
+        $("#label_renew").children("input").val("");
+    });
+    $("#renew").click(function () {
+        $("#label_renew").css("display", "initial");
+    });
+</script>
+</body>
+</html>
