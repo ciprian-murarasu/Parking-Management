@@ -12,7 +12,7 @@
         </p>
         <form th:action="@{/pay}" method="post">
             <label>Insert ticket code:
-                <input type="text" name="code" size="10" maxlength="10" required></label><br>
+                <input type="text" name="code" size="10" maxlength="10" required></label>
             <p th:text="${error_message}" class="alert" th:classappend="${error_message} != null?'alert-danger':''"></p>
             <input type="submit" value="Pay" >
         </form>

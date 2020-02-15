@@ -37,17 +37,24 @@ public class SubscriptionController {
     @PostMapping("/newSubscription")
     public String buySubscription(HttpServletRequest request, Model model) {
         String code = request.getParameter("subscription_code");
+        String purchaseType = request.getParameter("purchase_type");
         String errorMessage;
         Subscription subscription;
-        if (code.isEmpty()) {
+        if (purchaseType.equals("new")) {
             subscription = subscriptionService.generateSubscription();
         } else {
-            subscription = subscriptionService.getByCode(code);
-            if (subscription == null) {
-                errorMessage = "Subscription code is not valid";
-                model.addAttribute("error_message", errorMessage);
+            if (code.isEmpty()) {
+                model.addAttribute("error_message", "Subscription code is empty");
                 model.addAttribute("subscriptionTypes", subscriptionTypeService.getAllSubscriptionTypes());
                 return "newSubscription";
+            } else {
+                subscription = subscriptionService.getByCode(code);
+                if (subscription == null) {
+                    errorMessage = "Subscription code is not valid";
+                    model.addAttribute("error_message", errorMessage);
+                    model.addAttribute("subscriptionTypes", subscriptionTypeService.getAllSubscriptionTypes());
+                    return "newSubscription";
+                }
             }
         }
         DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");

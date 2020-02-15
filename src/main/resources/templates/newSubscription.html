@@ -7,25 +7,26 @@
     <div class="container">
         <h1>Buy or renew subscription</h1><br>
         <form th:action="@{/newSubscription}" method="post">
-            <p>
-                <label>Get new subscription<input type="radio" id="new" name="subscription_buy" required></label>
-                <label>Renew existing one<input type="radio" id="renew" name="subscription_buy"></label></p>
-            <p id="renew_code" style="display: none;">
+            <label style="display: inline-table; margin-right: 40px">Get new subscription
+                <input type="radio" id="new" name="purchase_type" value="new" required></label>
+            <label style="display: inline-table;">Renew existing one
+                <input type="radio" id="renew" name="purchase_type" value="renew"></label>
+            <div id="renew_code" style="display: none;">
                 <label>Enter the subscription's code you want to renew:
-                    <input type="text" id="existing_code" name="subscription_code" size="10"
-                           maxlength="10">
-                </label></p>
+                    <input type="text" id="existing_code" name="subscription_code" size="10" maxlength="10">
+                </label></div>
             <p>Choose subscription type:</p>
-            <div class="form-check-inline" th:each="subscriptionType : ${subscriptionTypes}">
-                <label class="form-check-label" th:for="${subscriptionType.price}"
-                       th:text="${subscriptionType.name} + ' (' +${subscriptionType.price} + ')'"></label>
-                <input type="radio" class="form-check-input" name="subscription_type" th:id="${subscriptionType.price}"
-                       th:value="${subscriptionType.name}" required>
+            <div style="display: inline-table; margin-right: 20px" th:each="subscriptionType : ${subscriptionTypes}">
+                <label th:for="${subscriptionType.price}"
+                       th:text="${subscriptionType.name} + ' (' +${subscriptionType.price} + ' lei)'"></label>
+                <input type="radio" name="subscription_type" th:id="${subscriptionType.price}"
+                       th:value="${subscriptionType.name}" style="margin-bottom: .1rem;" required>
             </div>
             <br><br>
             <label for="start_date">Start date:</label>
-            <input type="date" name="start_date" id="start_date" min="" required><br><br>
-            <input type="submit" value="Buy Subscription" ><br>
+            <input type="date" name="start_date" id="start_date" min="" required>
+            <p th:text="${error_message}" class="alert" th:classappend="${error_message} != null?'alert-danger':''"></p>
+            <input type="submit" value="Buy Subscription"><br>
         </form>
         <div id="subscription_details" style="display:none">
             <h5 class="h5">Subscription details:</h5>
@@ -36,7 +37,6 @@
             Start date: <span th:if="${subscription}!=null" th:text="${subscription.startDate}"></span><br>
             End date: <span th:if="${subscription}!=null" th:text="${subscription.endDate}"></span>
         </div>
-        <p th:text="${error_message}" class="alert" th:classappend="${error_message} != null?'alert-danger':''"></p>
     </div>
 </div>
 <div th:replace="_general :: footerfiles"></div>
@@ -53,9 +53,6 @@
     $("#renew").click(function () {
         $("#renew_code").show();
         $("#subscription_details").hide();
-    });
-    $("#new, #existing_code").click(function () {
-        $(".alert").hide();
     });
 
     var minDate = new Date();

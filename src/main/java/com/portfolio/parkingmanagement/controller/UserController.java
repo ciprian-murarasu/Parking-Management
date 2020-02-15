@@ -47,19 +47,22 @@ public class UserController {
         String newPasswordConfirm = request.getParameter("new_password_confirm");
         User user = userService.getByUsername("admin");
         String encryptedCurrentPassword = DigestUtils.md5DigestAsHex(currentPassword.getBytes());
+        boolean isChanged = false;
         if (!encryptedCurrentPassword.equals(user.getPassword())) {
-            model.addAttribute("error_message", "Current password is invalid");
+            model.addAttribute("alert_message", "Current password is not valid");
         } else if (!newPassword.equals(newPasswordConfirm)) {
-            model.addAttribute("error_message", "New password fields do not match");
+            model.addAttribute("alert_message", "New password fields do not match");
         } else if (currentPassword.equals(newPassword)) {
-            model.addAttribute("error_message", "New password must be different than the old one");
+            model.addAttribute("alert_message", "New password must be different than the old one");
         } else if (newPassword.length() < 5) {
-            model.addAttribute("error_message", "New password must have at least 5 characters");
+            model.addAttribute("alert_message", "New password must have at least 5 characters");
         } else {
-            model.addAttribute("success_message", "Password successfully changed");
+            isChanged = true;
+            model.addAttribute("alert_message", "Password successfully changed");
             user.setPassword(DigestUtils.md5DigestAsHex(newPassword.getBytes()));
             userService.save(user);
         }
+        model.addAttribute("is_changed",isChanged);
         return "changePassword";
     }
 

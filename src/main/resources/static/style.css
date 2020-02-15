@@ -29,8 +29,8 @@ p {
 
 .parking-space {
     display: inline-block;
-    width: 50px;
-    margin: 2px;
+    width: 3rem;
+    margin: .12rem;
     font-weight: 500;
     text-align: center;
     border-radius: .2rem;
@@ -50,13 +50,14 @@ p {
 
 .thicker-hr {
     margin: .5rem 0;
-    border-top-width: 2px;
+    border-top-width: .13rem;
 }
 
 .alert {
     width: fit-content;
     height: 2.2rem;
     padding: 0.25rem 0.8rem;
+    margin-bottom: 0.5rem;
 }
 
 .hidden {
@@ -69,13 +70,13 @@ p {
 }
 
 input[type="number"] {
-    width: 60px;
+    width: 3.6rem;
     text-align: center;
 }
 
 input[type="radio"] {
     vertical-align: middle;
-    margin-left: 5px;
+    margin-left: .3rem;
 }
 
 .custom-select {
@@ -85,4 +86,12 @@ input[type="radio"] {
 
 .custom-select-sm {
     font-size: 100%;
+}
+
+.form-buttons {
+    margin-top: .5rem;
+}
+
+.form-buttons a {
+    margin-left: 4rem;
 }

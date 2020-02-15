@@ -30,11 +30,14 @@
                 </select>
             </label><br>
             <label>Insert the number of new spaces:
-                <input type="number" name="number_of_spaces" min="1" value="3" required>
-            </label><br>
-            <input type="submit" value="Add">
+                <input type="number" name="number_of_spaces" min="0" value="3" required>
+            </label>
+            <p th:text="${error_message}" class="alert" th:classappend="${error_message} != null?'alert-danger':''"></p>
+            <div class="form-buttons">
+                <input type="submit" value="Add">
+                <a th:href="@{/maintenance}"><div class="btn btn-primary">Cancel</div></a>
+            </div>
         </form>
-        <p th:text="${error_message}" class="alert" th:classappend="${error_message} != null?'alert-danger':''"></p>
     </div>
 </div>
 <div th:replace="_general :: footerfiles"></div>
@@ -49,9 +52,6 @@
         $("#new_sector").hide();
         $("#new_sector").children().val("");
     });
-    $("input").click(function () {
-        $(".alert").hide();
-    })
 </script>
 </body>
 </html>
