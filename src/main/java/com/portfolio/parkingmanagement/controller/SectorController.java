@@ -19,14 +19,6 @@ public class SectorController {
         this.sectorService = sectorService;
     }
 
-//    private String addModel(Model model, String message, String page) {
-//        if (!message.isEmpty()) {
-//            model.addAttribute("error_message", message);
-//        }
-//        model.addAttribute("sectors", sectorService.getAllSectors());
-//        return page;
-//    }
-
     @PostMapping("/delete-sector")
     public String deleteSector(HttpServletRequest request, Model model) {
         String selectedSector = request.getParameter("selected_sector");

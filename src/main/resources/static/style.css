@@ -29,11 +29,12 @@ p {
 
 .parking-space {
     display: inline-block;
-    width: 3rem;
-    margin: .12rem;
+    width: 3.25rem;
+    margin: .15rem;
     font-weight: 500;
     text-align: center;
-    border-radius: .2rem;
+    border-radius: .25rem;
+    cursor: default;
 }
 
 .available {
@@ -44,12 +45,14 @@ p {
     background-color: orangered;
 }
 
-.available:hover, .occupied:hover {
-    cursor: default;
+.selected {
+    background-color: darkgrey;
+    transform: scale(1.15);
+    cursor: pointer;
 }
 
 .thicker-hr {
-    margin: .5rem 0;
+    margin: .4rem 0;
     border-top-width: .13rem;
 }
 
@@ -94,4 +97,5 @@ input[type="radio"] {
 
 .form-buttons a {
     margin-left: 4rem;
+    text-decoration: none;
 }

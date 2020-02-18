@@ -21,6 +21,11 @@ public class TicketController {
         this.sectorService = sectorService;
     }
 
+//    @GetMapping("/tickets")
+//    public String showTickets(Model model){
+//        model.addAttribute(ticketService.)
+//    }
+
     @GetMapping("/newTicket")
     public String buyTicket(Model model) {
         model.addAttribute("sectors", sectorService.getAllSectors());

@@ -28,6 +28,7 @@
             <p th:text="${error_message}" class="alert" th:classappend="${error_message} != null?'alert-danger':''"></p>
             <input type="submit" value="Buy Subscription"><br>
         </form>
+        <br>
         <div id="subscription_details" style="display:none">
             <h5 class="h5">Subscription details:</h5>
             <hr>
@@ -42,7 +43,7 @@
 <div th:replace="_general :: footerfiles"></div>
 <script>
     if ($("#subscription_details span").length > 0 && $(".alert").text() === "") {
-        $("#subscription_details").hide();
+        $("#subscription_details").show();
     }
 
     $("#new").click(function () {

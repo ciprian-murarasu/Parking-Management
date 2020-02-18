@@ -15,7 +15,6 @@
                 <span th:text="'Your '+${code.startsWith('T')?'ticket':'subscription'}+' code is: '"></span>
                 <span th:text="${code}" style="font-weight: bold;"></span><br>
             </div>
-            <!--<p>Your ticket/subscription code is: <span th:text="${code}" style="font-weight: bold;"></span></p>-->
             <div class="sector" th:each="sector : ${sectors}">
                 <div th:each="parkingSpace : ${sector.parkingSpaces}" class="parking-space"
                      th:text="${sector.name}+${parkingSpace.number}"
@@ -35,7 +34,9 @@
     var isSelected = false;
     $(".parking-space").click(function () {
         isSelected = true;
+        $(".selected").removeClass("selected");
         if ($(this).hasClass("available")) {
+            $(this).addClass("selected");
             $(".alert").text("You selected parking space: " + $(this).text());
             $("#selected_space").val($(this).text());
             $(".alert").removeClass("alert-danger");

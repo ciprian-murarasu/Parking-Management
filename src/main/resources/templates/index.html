@@ -12,7 +12,6 @@
             Below you can see the situation of our parking spaces (available spaces are illustrated in green).<br>
             To access our parking please buy a ticket or a subscription. If you already own a valid subscription please
             use Access tab on the top.</p>
-        <!--<div th:replace="_general :: parkinglot"></div>-->
         <div class="sector" th:each="sector : ${sectors}">
             <div th:each="parkingSpace : ${sector.parkingSpaces}" class="parking-space"
                  th:text="${sector.name}+${parkingSpace.number}"

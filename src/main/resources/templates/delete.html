@@ -13,11 +13,11 @@
                     <option th:each="sector : ${sectors}" th:text="${sector.name}" th:value="${sector.id}"></option>
                 </select>
             </label>
-            <input type="submit" value="Delete sector">
+            <input type="submit" style="margin-left: 2rem;" value="Delete sector">
         </form>
         <br>
         <form action="delete-space" method="post">
-            <div style="margin-bottom: .6rem;">
+            <div style="margin-bottom: 1rem;">
                 <div class="sector" th:each="sector : ${sectors}">
                     <div th:each="parkingSpace : ${sector.parkingSpaces}" class="parking-space"
                          th:text="${sector.name}+${parkingSpace.number}"
@@ -28,17 +28,35 @@
             </div>
             <input type="hidden" id="deleted_spaces" name="deleted_spaces">
             <p>Your selected spaces are: <span id="show_deleted" style="font-weight: bold"></span></p>
+            <p th:text="${error_message}" class="alert" th:classappend="${error_message} != null?'alert-danger':''"></p>
             <div class="form-buttons">
                 <input type="submit" value="Delete spaces">
-                <a th:href="@{/maintenance}"><div class="btn btn-primary">Cancel</div></a>
+                <a href="">
+                    <div class="btn btn-primary" id="reset">Reset</div>
+                </a>
+                <a th:href="@{/maintenance}">
+                    <div class="btn btn-primary">Cancel</div>
+                </a>
             </div>
         </form>
-        <p th:text="${error_message}" class="alert" th:classappend="${error_message} != null?'alert-danger':''"></p>
     </div>
 </div>
 <div th:replace="_general :: footerfiles"></div>
+</body>
 <script>
+    $("select").click(function () {
+        $(".alert").css("visibility", "hidden");
+    });
+
+    $("#reset").click(function () {
+        $(".selected").removeClass("selected");
+        $("#show_deleted").text("");
+        $("#deleted_spaces").val("");
+    });
+
     $(".available").click(function () {
+        $(this).toggleClass("selected");
+        $(".alert").css("visibility", "hidden");
         var deletedSpaces = $("#show_deleted").text();
         var selectedSpace = $(this).text();
         if (!deletedSpaces.includes(selectedSpace)) {
@@ -58,9 +76,29 @@
                 }
             }
         }
+
+        var deletedSpacesArray = deletedSpaces.split(", ").sort(sortAscending);
+        deletedSpaces = deletedSpacesArray.join(", ");
         $("#show_deleted").text(deletedSpaces);
         $("#deleted_spaces").val(deletedSpaces);
     });
+
+    function sortAscending(a, b) {
+        var sector = a.slice(0, a.search(/[0-9]/));
+        var sectorToCompare = b.slice(0, b.search(/[0-9]/));
+        if (sector < sectorToCompare) {
+            return -1;
+        } else if (sector > sectorToCompare) {
+            return 1;
+        } else {
+            var space = parseInt(a.replace(/[A-Z]+/, ""));
+            var spaceToCompare = parseInt(b.replace(/[A-Z]+/, ""));
+            if (space <= spaceToCompare) {
+                return -1;
+            } else {
+                return 1;
+            }
+        }
+    }
 </script>
-</body>
 </html>

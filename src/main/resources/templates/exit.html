@@ -17,7 +17,7 @@
             <input type="submit" value="Exit" >
         </form>
         <br>
-        <div th:class="${ticket}==null?'hidden':''" style="padding-left: .6rem">
+        <div th:class="${ticket}==null?'hidden':''">
             <h5 class="h5">Ticket details:</h5>
             <hr>
             Ticket code: <span th:text="${ticket}?${ticket.code}:''" style="font-weight: bold;"></span><br>

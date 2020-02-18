@@ -6,6 +6,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "tickets")
@@ -26,6 +27,9 @@ public class Ticket {
     private Timestamp exitDate;
 
     private Timestamp payDate;
+
+    @OneToMany(mappedBy = "ticket")
+    List<TicketPriceType> ticketPriceTypes;
 
     @OneToOne(mappedBy = "ticket", cascade = CascadeType.ALL)
     private ParkingSpace parkingSpace;
