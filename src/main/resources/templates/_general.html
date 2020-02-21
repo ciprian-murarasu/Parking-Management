@@ -45,7 +45,7 @@
         </ul>
     </div>
 </nav>
-<nav class="navbar" style="width: 30%" th:fragment="vertical_nav">
+<nav class="navbar" th:fragment="vertical_nav">
     <ul class="navbar-nav mr-auto">
         <li class="nav-item">
             <a class="nav-link" th:href="@{/add-space}">Add spaces/sectors</a>
@@ -53,10 +53,10 @@
         <li class="nav-item">
             <a class="nav-link" th:href="@{/delete-space}">Delete spaces/sectors</a>
         </li>
-        <li class="nav-item dropdown">
+        <li class="nav-item dropright" style="position: relative">
             <a class="nav-link dropdown-toggle" href="#" id="verticalNavDropdown" role="button" data-toggle="dropdown"
                aria-haspopup="true" aria-expanded="false">Edit ticket tariffs/subscription types</a>
-            <div class="dropdown-menu" aria-labelledby="verticalNavDropdown">
+            <div class="dropdown-menu right-menu" aria-labelledby="verticalNavDropdown">
                 <a class="dropdown-item" th:href="@{/edit-tickets}">Edit tickets</a>
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" th:href="@{/edit-subscriptions}">Edit subscriptions</a>

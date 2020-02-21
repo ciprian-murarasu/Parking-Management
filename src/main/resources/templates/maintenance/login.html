@@ -12,7 +12,7 @@
         </form>
     </div>
 </div>
-<p th:text="${error_message}" class="alert" th:classappend="${error_message} != null?'alert-danger':''"></p>
+<p class="alert" th:text="${error_message}" th:classappend="${error_message}!=null?'alert-danger':''"></p>
 <div th:replace="_general :: footerfiles"></div>
 </body>
 </html>

@@ -2,8 +2,7 @@ package com.portfolio.parkingmanagement.model;
 
 
 import javax.persistence.*;
-import java.sql.Timestamp;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "subscriptions_usage")
@@ -12,8 +11,8 @@ public class SubscriptionUsage {
     @GeneratedValue
     private long id;
 
-    private Timestamp enterDate;
-    private Timestamp exitDate;
+    private LocalDateTime enterDate;
+    private LocalDateTime exitDate;
 
     @ManyToOne
     @JoinColumn(name = "subscription_id")
@@ -22,7 +21,7 @@ public class SubscriptionUsage {
     public SubscriptionUsage() {
     }
 
-    public SubscriptionUsage(Timestamp enterDate, Timestamp exitDate, Subscription subscription) {
+    public SubscriptionUsage(LocalDateTime enterDate, LocalDateTime exitDate, Subscription subscription) {
         this.enterDate = enterDate;
         this.exitDate = exitDate;
         this.subscription = subscription;
@@ -36,19 +35,19 @@ public class SubscriptionUsage {
         this.id = id;
     }
 
-    public Timestamp getEnterDate() {
+    public LocalDateTime getEnterDate() {
         return enterDate;
     }
 
-    public void setEnterDate(Timestamp enterDate) {
-        enterDate = new Timestamp(new Date().getTime());
+    public void setEnterDate(LocalDateTime enterDate) {
+        enterDate = LocalDateTime.now();
     }
 
-    public Timestamp getExitDate() {
+    public LocalDateTime getExitDate() {
         return exitDate;
     }
 
-    public void setExitDate(Timestamp exitDate) {
+    public void setExitDate(LocalDateTime exitDate) {
         this.exitDate = exitDate;
     }
 

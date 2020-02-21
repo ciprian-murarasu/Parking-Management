@@ -32,7 +32,7 @@
             <label>Insert the number of new spaces:
                 <input type="number" name="number_of_spaces" min="0" value="3" required>
             </label>
-            <p th:text="${error_message}" class="alert" th:classappend="${error_message} != null?'alert-danger':''"></p>
+            <p class="alert" th:text="${error_message}" th:classappend="${error_message}!=null?'alert-danger':''"></p>
             <div class="form-buttons">
                 <input type="submit" value="Add">
                 <a th:href="@{/maintenance}"><div class="btn btn-primary">Cancel</div></a>

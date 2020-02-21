@@ -13,7 +13,7 @@
         <form action="/" method="post">
             <div style="margin-bottom: .6rem">
                 <span th:text="'Your '+${code.startsWith('T')?'ticket':'subscription'}+' code is: '"></span>
-                <span th:text="${code}" style="font-weight: bold;"></span><br>
+                <span th:text="${code}" style="font-weight: 500;"></span><br>
             </div>
             <div class="sector" th:each="sector : ${sectors}">
                 <div th:each="parkingSpace : ${sector.parkingSpaces}" class="parking-space"
@@ -22,7 +22,7 @@
                 </div>
                 <hr class="thicker-hr">
             </div>
-            <div class="alert"></div>
+            <p class="alert"></p>
             <input type="hidden" name="code" th:value="${code}">
             <input type="hidden" name="selected_space" id="selected_space">
             <input type="submit" value="OK" id="submit">
@@ -43,6 +43,7 @@
             $(".alert").addClass("alert-success");
         } else {
             $(".alert").text($(this).text() + " parking space is unavailable!");
+            $("#selected_space").val("");
             $(".alert").removeClass("alert-success");
             $(".alert").addClass("alert-danger");
         }
@@ -53,7 +54,7 @@
             $(".alert").addClass("alert-danger");
             e.preventDefault();
         }
-        if ($(".alert").text().includes("unavailable")) {
+        if ($("#selected_space").val() === "") {
             e.preventDefault();
         }
     });

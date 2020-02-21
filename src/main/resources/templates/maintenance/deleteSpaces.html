@@ -28,7 +28,7 @@
             </div>
             <input type="hidden" id="deleted_spaces" name="deleted_spaces">
             <p>Your selected spaces are: <span id="show_deleted" style="font-weight: bold"></span></p>
-            <p th:text="${error_message}" class="alert" th:classappend="${error_message} != null?'alert-danger':''"></p>
+            <p class="alert" th:text="${error_message}" th:classappend="${error_message}!=null?'alert-danger':''"></p>
             <div class="form-buttons">
                 <input type="submit" value="Delete spaces">
                 <a href="">

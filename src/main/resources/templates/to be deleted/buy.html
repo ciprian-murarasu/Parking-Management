@@ -59,7 +59,7 @@
                       th:text="${subscription.startDate}"></span><br>
     End date: <span th:if="${subscription}!=null" id="subscription_end_date" th:text="${subscription.endDate}"></span>
 </div>
-<p th:text="${error_message}" class="alert" th:classappend="${error_message} != null?'alert-danger':''"></p>
+<p class="alert" th:text="${error_message}" th:classappend="${error_message} != null?'alert-danger':''"></p>
 
 <script>
     if (typeof($("span[id^='subscription']")) !== 'undefined' && $(".alert").text() === "") {

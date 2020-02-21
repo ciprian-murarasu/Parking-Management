@@ -99,3 +99,21 @@ input[type="radio"] {
     margin-left: 4rem;
     text-decoration: none;
 }
+
+.details span {
+    font-weight: 500;
+}
+
+.details hr {
+    width: 16rem;
+    display: table-caption;
+    margin: 0.5rem 0;
+}
+
+.right-menu {
+    position: absolute !important;
+    top: 0;
+    left: 100%;
+    margin-top: 0.2rem !important;
+    margin-left: 0.5rem !important;
+}

@@ -1,7 +1,7 @@
 package com.portfolio.parkingmanagement.model;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -16,9 +16,9 @@ public class Subscription {
     @ManyToOne
     private SubscriptionType subscriptionType;
 
-    private Timestamp startDate;
+    private LocalDateTime startDate;
 
-    private Timestamp endDate;
+    private LocalDateTime endDate;
 
     private int price;
 
@@ -56,21 +56,21 @@ public class Subscription {
         this.subscriptionType = subscriptionType;
     }
 
-    public Timestamp getStartDate() {
+    public LocalDateTime getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Timestamp startDate) {
+    public void setStartDate(LocalDateTime startDate) {
         this.startDate = startDate;
     }
 
-    public Timestamp getEndDate() {
+    public LocalDateTime getEndDate() {
         return endDate;
     }
 
     public void setEndDate() {
         int period = subscriptionType.getPeriod();
-        endDate = new Timestamp(startDate.getTime() + (period * 24 * 3600 - 1) * 1000L);
+        endDate = startDate.plusDays(period).minusSeconds(1);
     }
 
     public int getPrice() {

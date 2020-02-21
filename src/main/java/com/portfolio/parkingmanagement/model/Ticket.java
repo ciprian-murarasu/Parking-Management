@@ -4,8 +4,7 @@ import org.hibernate.validator.constraints.Range;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.sql.Timestamp;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -22,13 +21,13 @@ public class Ticket {
     private Integer paidAmount;
 
     @NotNull
-    private Timestamp enterDate;
+    private LocalDateTime enterDate;
 
-    private Timestamp exitDate;
+    private LocalDateTime exitDate;
 
-    private Timestamp payDate;
+    private LocalDateTime payDate;
 
-    @OneToMany(mappedBy = "ticket")
+    @OneToMany(/*mappedBy = "ticket"*/)
     List<TicketPriceType> ticketPriceTypes;
 
     @OneToOne(mappedBy = "ticket", cascade = CascadeType.ALL)
@@ -37,9 +36,8 @@ public class Ticket {
     public Ticket() {
         code = "T" + (long) Math.ceil(Math.random() * 1_000_000_000);
         paidAmount = 0;
-        enterDate = new Timestamp(new Date().getTime());
+        enterDate = LocalDateTime.now();
     }
-
 
     public Long getId() {
         return id;
@@ -65,27 +63,27 @@ public class Ticket {
         this.paidAmount = paidAmount;
     }
 
-    public Timestamp getEnterDate() {
+    public LocalDateTime getEnterDate() {
         return enterDate;
     }
 
-    public void setEnterDate(Timestamp enterDate) {
+    public void setEnterDate(LocalDateTime enterDate) {
         this.enterDate = enterDate;
     }
 
-    public Timestamp getExitDate() {
+    public LocalDateTime getExitDate() {
         return exitDate;
     }
 
-    public void setExitDate(Timestamp exitDate) {
+    public void setExitDate(LocalDateTime exitDate) {
         this.exitDate = exitDate;
     }
 
-    public Timestamp getPayDate() {
+    public LocalDateTime getPayDate() {
         return payDate;
     }
 
-    public void setPayDate(Timestamp payDate) {
+    public void setPayDate(LocalDateTime payDate) {
         this.payDate = payDate;
     }
 

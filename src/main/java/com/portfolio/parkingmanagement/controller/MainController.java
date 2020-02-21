@@ -68,13 +68,13 @@ public class MainController {
     @GetMapping("/buy")
     public String goToBuy(Model model) {
         model.addAttribute("subscriptionTypes", subscriptionTypeService.getAllSubscriptionTypes());
-        return "newSubscription";
+        return "buySubscription";
     }
 
     @GetMapping("/access")
     public String accessParking(Model model) {
         if (parkingSpaceService.hasAvailableSpaces()) {
-            return "access";
+            return "accessParking";
         } else {
             model.addAttribute("error_message", "Parking lot is full");
             model.addAttribute("sectors", sectorService.getAllSectors());
@@ -89,14 +89,16 @@ public class MainController {
         String errorMessage = "";
         if (!subscriptionService.isValid(code)) {
             errorMessage = "Subscription code is not valid";
-        } else if (subscriptionService.isExpired(code)) {
+        } else if (!subscriptionService.hasStarted(code)) {
+            errorMessage = "Your subscription can be used starting with " + subscriptionService.getByCode(code).getStartDate().toString().replace("T"," ");
+        } else if (subscriptionService.hasExpired(code)) {
             errorMessage = "Your subscription has expired";
         } else if (subscriptionService.hasEntered(code)) {
             errorMessage = "This subscription is already using the parking lot";
         }
         if (!errorMessage.isEmpty()) {
             model.addAttribute("error_message", errorMessage);
-            return "access";
+            return "accessParking";
         }
         model.addAttribute("sectors", sectorService.getAllSectors());
         model.addAttribute("parkingSpaces", parkingSpaceService.getAllParkingSpaces());
@@ -106,7 +108,7 @@ public class MainController {
 
     @GetMapping("/pay")
     public String goToPay() {
-        return "pay";
+        return "payTicket";
     }
 
     @PostMapping("/pay")
@@ -119,7 +121,7 @@ public class MainController {
                 model.addAttribute("ticket", ticketService.getByCode(code));
             } else {
                 if (!ticketService.payTicket(code)) {
-                    errorMessage = "Ticket is already paid";
+                    errorMessage = "Ticket is already paid. Proceed to exit";
                 } else {
                     model.addAttribute("ticket", ticketService.getByCode(code));
                 }
@@ -130,12 +132,12 @@ public class MainController {
         if (!errorMessage.isEmpty()) {
             model.addAttribute("error_message", errorMessage);
         }
-        return "pay";
+        return "payTicket";
     }
 
     @GetMapping("/exit")
     public String goToExit() {
-        return "exit";
+        return "exitParking";
     }
 
     @PostMapping("/exit")
@@ -161,11 +163,11 @@ public class MainController {
                 }
             }
         } else if (subscriptionService.isValid(code)) {
-            if (subscriptionService.isExpired(code)) {
+            if (subscriptionService.hasExpired(code)) {
                 errorMessage = "Your subscription has expired. A ticket was emitted to pay the difference";
                 Subscription subscription = subscriptionService.getByCode(code);
                 ParkingSpace parkingSpace = subscription.getParkingSpace();
-                Ticket newTicket = ticketService.generateTicketForSubscription(subscription);
+                Ticket newTicket = ticketService.generateTicketForExpiredSubscription(subscription);
                 newTicket.setParkingSpace(parkingSpace);
                 ticketService.save(newTicket);
                 parkingSpace.setTicket(newTicket);
@@ -185,14 +187,14 @@ public class MainController {
         if (!errorMessage.isEmpty()) {
             model.addAttribute("error_message", errorMessage);
         }
-        return "exit";
+        return "exitParking";
     }
 
     @GetMapping("/maintenance")
     public String goToMaintenance() {
         User user = userService.getByUsername("admin");
         if (user.isLogged()) {
-            return "maintenance";
-        } else return "login";
+            return "maintenance/maintenance";
+        } else return "maintenance/login";
     }
 }

@@ -11,11 +11,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.servlet.http.HttpServletRequest;
-import java.sql.Timestamp;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Controller
 public class SubscriptionController {
@@ -31,58 +29,43 @@ public class SubscriptionController {
     @GetMapping("/newSubscription")
     public String getSubscriptionType(Model model) {
         model.addAttribute("subscriptionTypes", subscriptionTypeService.getAllSubscriptionTypes());
-        return "newSubscription";
+        return "buySubscription";
     }
 
     @PostMapping("/newSubscription")
     public String buySubscription(HttpServletRequest request, Model model) {
-        String code = request.getParameter("subscription_code");
         String purchaseType = request.getParameter("purchase_type");
-        String errorMessage;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDateTime startDate = LocalDate.parse(request.getParameter("start_date"), formatter).atStartOfDay();
+        String alertMessage = "";
         Subscription subscription;
+        boolean isPurchased = false;
         if (purchaseType.equals("new")) {
             subscription = subscriptionService.generateSubscription();
+            isPurchased = true;
         } else {
-            if (code.isEmpty()) {
-                model.addAttribute("error_message", "Subscription code is empty");
-                model.addAttribute("subscriptionTypes", subscriptionTypeService.getAllSubscriptionTypes());
-                return "newSubscription";
+            String code = request.getParameter("subscription_code");
+            subscription = subscriptionService.getByCode(code);
+            if (subscription == null) {
+                alertMessage = "Subscription code is not valid";
+            } else if (!subscriptionService.hasExpired(code)) {
+                alertMessage = "Subscription will expire on " + subscription.getEndDate().toString().substring(0, 10) + ", you can renew it after this date";
             } else {
-                subscription = subscriptionService.getByCode(code);
-                if (subscription == null) {
-                    errorMessage = "Subscription code is not valid";
-                    model.addAttribute("error_message", errorMessage);
-                    model.addAttribute("subscriptionTypes", subscriptionTypeService.getAllSubscriptionTypes());
-                    return "newSubscription";
-                }
+                isPurchased = true;
             }
         }
-        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        Date date = null;
-        try {
-            date = formatter.parse(request.getParameter("start_date"));
-        } catch (ParseException e) {
-            e.printStackTrace();
+        if (isPurchased) {
+            alertMessage = "Your purchase was successful. You can see below the details";
+            SubscriptionType subscriptionType = subscriptionTypeService.findByName(request.getParameter("subscription_type"));
+            subscription.setSubscriptionType(subscriptionType);
+            subscription.setPrice();
+            subscription.setStartDate(startDate);
+            subscription.setEndDate();
+            subscriptionService.save(subscription);
+            model.addAttribute("subscription", subscription);
         }
-        if (date != null) {
-            if (subscription.getEndDate() != null && !subscriptionService.isExpired(subscription.getCode())) {
-                if (date.getTime() <= subscription.getEndDate().getTime()) {
-                    errorMessage = "Please select a date later than " + subscription.getEndDate().toString();
-                    model.addAttribute("error_message", errorMessage);
-                    model.addAttribute("subscription", subscription);
-                    model.addAttribute("subscriptionTypes", subscriptionTypeService.getAllSubscriptionTypes());
-                    return "newSubscription";
-                }
-            }
-            subscription.setStartDate(new Timestamp(date.getTime()));
-        }
-        SubscriptionType subscriptionType = subscriptionTypeService.findByName(request.getParameter("subscription_type"));
-        subscription.setSubscriptionType(subscriptionType);
-        subscription.setPrice();
-        subscription.setEndDate();
-        subscriptionService.save(subscription);
-        model.addAttribute("subscription", subscription);
+        model.addAttribute("alert_message", alertMessage);
         model.addAttribute("subscriptionTypes", subscriptionTypeService.getAllSubscriptionTypes());
-        return "newSubscription";
+        return "buySubscription";
     }
 }

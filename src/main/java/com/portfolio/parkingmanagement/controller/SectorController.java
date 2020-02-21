@@ -39,6 +39,6 @@ public class SectorController {
             }
         }
         model.addAttribute("sectors", sectorService.getAllSectors());
-        return "delete";
+        return "maintenance/deleteSpaces";
     }
 }

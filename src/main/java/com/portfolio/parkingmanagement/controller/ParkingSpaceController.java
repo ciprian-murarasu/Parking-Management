@@ -29,7 +29,7 @@ public class ParkingSpaceController {
     public String showAdd(Model model) {
         model.addAttribute("sectors", sectorService.getAllSectors());
         model.addAttribute("parkingSpaces", parkingSpaceService.getAllParkingSpaces());
-        return "addSpaces";
+        return "maintenance/addSpaces";
     }
 
     @PostMapping("/add-space")
@@ -81,14 +81,14 @@ public class ParkingSpaceController {
         }
         model.addAttribute("sectors", sectorService.getAllSectors());
         model.addAttribute("parkingSpaces", parkingSpaceService.getAllParkingSpaces());
-        return "addSpaces";
+        return "maintenance/addSpaces";
     }
 
     @GetMapping("/delete-space")
     public String showDelete(Model model) {
         model.addAttribute("sectors", sectorService.getAllSectors());
         model.addAttribute("parkingSpaces", parkingSpaceService.getAllParkingSpaces());
-        return "delete";
+        return "maintenance/deleteSpaces";
     }
 
     @PostMapping("/delete-space")
@@ -123,6 +123,6 @@ public class ParkingSpaceController {
         }
         model.addAttribute("sectors", sectorService.getAllSectors());
         model.addAttribute("parkingSpaces", parkingSpaceService.getAllParkingSpaces());
-        return "delete";
+        return "maintenance/deleteSpaces";
     }
 }

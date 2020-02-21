@@ -18,42 +18,41 @@
             <p>Choose subscription type:</p>
             <div style="display: inline-table; margin-right: 20px" th:each="subscriptionType : ${subscriptionTypes}">
                 <label th:for="${subscriptionType.price}"
-                       th:text="${subscriptionType.name} + ' (' +${subscriptionType.price} + ' lei)'"></label>
+                       th:text="${subscriptionType.name} + ' (' +${subscriptionType.price} + ' RON)'"></label>
                 <input type="radio" name="subscription_type" th:id="${subscriptionType.price}"
                        th:value="${subscriptionType.name}" style="margin-bottom: .1rem;" required>
             </div>
             <br><br>
-            <label for="start_date">Start date:</label>
-            <input type="date" name="start_date" id="start_date" min="" required>
-            <p th:text="${error_message}" class="alert" th:classappend="${error_message} != null?'alert-danger':''"></p>
+            <label>Start date:
+                <input type="date" id="start_date" name="start_date" required></label>
+            <p class="alert" th:text="${alert_message}"
+               th:classappend="${alert_message}!=null ? (${subscription!=null}?'alert-success':'alert-danger') : ''"></p>
             <input type="submit" value="Buy Subscription"><br>
         </form>
         <br>
-        <div id="subscription_details" style="display:none">
-            <h5 class="h5">Subscription details:</h5>
+        <div class="details" th:if="${subscription}!=null">
+            <h5 class="h5">Subscription details</h5>
             <hr>
-            Subscription code: <span th:if="${subscription}!=null" th:text="${subscription.code}"
-                                     style="font-weight: bold;"></span><br>
-            Subscription price: <span th:if="${subscription}!=null" th:text="${subscription.price}"></span><br>
-            Start date: <span th:if="${subscription}!=null" th:text="${subscription.startDate}"></span><br>
-            End date: <span th:if="${subscription}!=null" th:text="${subscription.endDate}"></span>
+            Subscription code: <span th:text="${subscription.code}"></span><br>
+            Subscription price: <span th:text="${subscription.price} + ' RON'"></span><br>
+            Start date: <span class="date" th:text="${subscription.startDate}"></span><br>
+            End date: <span class="date" th:text="${subscription.endDate}"></span>
         </div>
     </div>
 </div>
 <div th:replace="_general :: footerfiles"></div>
 <script>
-    if ($("#subscription_details span").length > 0 && $(".alert").text() === "") {
-        $("#subscription_details").show();
+
+    if ($(".alert").hasClass("alert-success")) {
+        $(".details").show();
     }
 
     $("#new").click(function () {
         $("#renew_code").hide();
         $("#renew_code").find("input").val("");
-        $("#subscription_details").hide();
     });
     $("#renew").click(function () {
         $("#renew_code").show();
-        $("#subscription_details").hide();
     });
 
     var minDate = new Date();

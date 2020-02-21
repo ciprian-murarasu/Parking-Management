@@ -1,14 +1,11 @@
 package com.portfolio.parkingmanagement.service;
 
 import com.portfolio.parkingmanagement.model.Subscription;
-import com.portfolio.parkingmanagement.model.SubscriptionUsage;
 import com.portfolio.parkingmanagement.repository.SubscriptionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
-import java.util.Date;
-import java.util.List;
+import java.time.LocalDateTime;
 
 @Service
 public class SubscriptionService {
@@ -41,10 +38,14 @@ public class SubscriptionService {
         return getByCode(code).getParkingSpace() != null;
     }
 
-    public boolean isExpired(String code) {
+    public boolean hasStarted(String code) {
         Subscription subscription = getByCode(code);
-        Timestamp currentDate = new Timestamp(new Date().getTime());
-        return currentDate.getTime() > subscription.getEndDate().getTime();
+        return subscription.getStartDate().compareTo(LocalDateTime.now()) <= 0;
+    }
+
+    public boolean hasExpired(String code) {
+        Subscription subscription = getByCode(code);
+        return subscription.getEndDate().isBefore(LocalDateTime.now());
     }
 //
 //    public List<SubscriptionUsage> getAllUsages(String code) {

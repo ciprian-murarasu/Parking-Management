@@ -28,16 +28,16 @@ public class UserController {
         User user = userService.getByUsername(username);
         if (user == null || !encryptedPassword.equals(user.getPassword())) {
             model.addAttribute("error_message", "Incorrect username or password");
-            return "login";
+            return "maintenance/login";
         }
         user.setLogged(true);
         userService.save(user);
-        return "maintenance";
+        return "maintenance/maintenance";
     }
 
     @GetMapping("/change-password")
     public String showChangePassword() {
-        return "changePassword";
+        return "maintenance/changePassword";
     }
 
     @PostMapping("/change-password")
@@ -63,7 +63,7 @@ public class UserController {
             userService.save(user);
         }
         model.addAttribute("is_changed",isChanged);
-        return "changePassword";
+        return "maintenance/changePassword";
     }
 
     @GetMapping("/logout")

@@ -6,8 +6,8 @@ import com.portfolio.parkingmanagement.repository.TicketRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
-import java.util.Date;
+import java.time.Duration;
+import java.time.LocalDateTime;
 
 @Service
 public class TicketService {
@@ -29,10 +29,9 @@ public class TicketService {
         return ticket;
     }
 
-    public Ticket generateTicketForSubscription(Subscription subscription) {
+    public Ticket generateTicketForExpiredSubscription(Subscription subscription) {
         Ticket ticket = new Ticket();
-        long enterDate = subscription.getEndDate().getTime() + 1000;
-        ticket.setEnterDate(new Timestamp(enterDate));
+        ticket.setEnterDate(subscription.getEndDate().plusSeconds(1));
         save(ticket);
         return ticket;
     }
@@ -56,9 +55,9 @@ public class TicketService {
     public boolean payTicket(String code) {
         Ticket ticket = getByCode(code);
         if (ticket.getPayDate() == null) {
-            Timestamp enterDate = ticket.getEnterDate();
-            Timestamp payDate = new Timestamp(new Date().getTime());
-            int minutesSpent = (int) Math.ceil((payDate.getTime() - enterDate.getTime()) / 60_000);
+            LocalDateTime enterDate = ticket.getEnterDate();
+            LocalDateTime payDate = LocalDateTime.now();
+            int minutesSpent = (int) Duration.between(enterDate, payDate).toMinutes();
             int hoursSpent = minutesSpent / 60;
             if (minutesSpent % 60 > 0) {
                 hoursSpent++;
@@ -74,10 +73,10 @@ public class TicketService {
 
     public boolean hasToPayExtra(String code) {
         Ticket ticket = getByCode(code);
-        Timestamp exitDate = new Timestamp(new Date().getTime());
+        LocalDateTime exitDate = LocalDateTime.now();
         if (ticket.getExitDate() == null && ticket.getPayDate() != null) {
-            Timestamp payDate = ticket.getPayDate();
-            int extraMinutesSpent = (int) Math.ceil((exitDate.getTime() - payDate.getTime()) / 60_000);
+            LocalDateTime payDate = ticket.getPayDate();
+            int extraMinutesSpent = (int) Duration.between(payDate, exitDate).toMinutes();
             return extraMinutesSpent > 30;
         }
         return false;
@@ -85,18 +84,18 @@ public class TicketService {
 
     public int payExtra(String code) {
         Ticket ticket = getByCode(code);
-        Timestamp enterDate = ticket.getEnterDate();
+        LocalDateTime enterDate = ticket.getEnterDate();
         int extraHours = 0;
         if (ticket.getExitDate() == null) {
-            Timestamp exitDate = new Timestamp(new Date().getTime());
-            int totalMinutesSpent = (int) Math.ceil((exitDate.getTime() - enterDate.getTime()) / 60_000);
+            LocalDateTime payDate = LocalDateTime.now();
+            int totalMinutesSpent = (int) Duration.between(enterDate, payDate).toMinutes();
             int minutesPaid = ticket.getPaidAmount() / PRICE_PER_HOUR * 60;
             int extraMinutes = totalMinutesSpent - minutesPaid;
             extraHours = extraMinutes / 60;
             if (extraMinutes % 60 > 0) {
                 extraHours++;
             }
-            ticket.setPayDate(new Timestamp(new Date().getTime()));
+            ticket.setPayDate(payDate);
             ticket.setPaidAmount(ticket.getPaidAmount() + extraHours * PRICE_PER_HOUR);
             save(ticket);
         }
@@ -109,7 +108,7 @@ public class TicketService {
 
     public boolean exitTicket(String code) {
         Ticket ticket = getByCode(code);
-        Timestamp exitDate = new Timestamp(new Date().getTime());
+        LocalDateTime exitDate = LocalDateTime.now();
         if (!hasToPayExtra(code)) {
             ticket.setExitDate(exitDate);
             save(ticket);
